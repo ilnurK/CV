@@ -11,10 +11,10 @@
 #define field_cell ' '
 
 // game statuses
-#define flag_game_end -1
-#define flag_game_pause 0
-#define flag_game_start 1
-#define flag_game_play 2
+#define game_end -1
+#define game_pause 0
+#define game_start 1
+#define game_play 2
 #define right 1
 #define left -1
 #define up -1
@@ -42,7 +42,7 @@ typedef struct {
 typedef struct {
     int x;
     int y;
-    int value;
+    int val;
 } TScore;
 
 #endif
