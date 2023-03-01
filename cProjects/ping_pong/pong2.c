@@ -6,23 +6,28 @@
 #include "config.h"
 
 void DrawStaticObj(char field[Y][X]);
-void Init(TRacket*, TRacket*, TBall*);
-void CheckInput(char*, int*, TRacket*, TRacket*, TBall*);
-void MoveRacket(char, TRacket*);
-int BallMove(int*, TBall*, TRacket, TRacket, char field[Y][X]);
-void AfterWinInit(TBall*, int*, int, TRacket, char field[Y][X]);
-void LooseCam(char field[Y][X], TBall, TRacket);
-void CheckChangeDirection(TBall*, TRacket);
-void PrintPause(char field[Y][X]);
+void StartGame(TRacket*, TRacket*, TBall*);
+char CheckInput(int*, TBall*);
+void RacketMove(char, TRacket*);
+int BallMove(int*, TBall*);
+void BallAutoMove(TBall* ball);
+void HoldMoment(char field[Y][X]);
+void AfterGoalMove(int, TRacket, TRacket, TBall*);
+void CheckChangeDirection(TBall*, TRacket, TRacket);
+void CheckTouchRacket(TBall*, TRacket);
+void CheckTouchBorder(TBall*);
 void DrawDynamicObj(char field[Y][X], TBall, TRacket, TRacket, TScore, TScore);
 void DrawScore(char field[Y][X], int, int, TScore);
 void FieldPrint(char field[Y][X]);
 void CheckScore(int*, TScore, TScore);
-void CheckWinner(char field[Y][X], TScore, TScore);
-void FieldPrintEnd(char field[Y][X]);
+void WinnerPrint(char field[Y][X], TScore, TScore);
+void PrintAtExit(char field[Y][X]);
+void PrintText(char field[Y][X], char*, int, int);
 
 int main(void) {
     initscr();
+    int delay = 1;
+    halfdelay(delay);
 
     char field[Y][X];
     TRacket racket_left = {.size = 3,
@@ -42,42 +47,44 @@ int main(void) {
                             .key_up_alt = 'K',
                             .key_down_alt = 'M'};
     TBall ball = {.symbol = 'o', .speed = 1};
-    TScore score_left = {.value = 0, .y = 0, .x = 5};
-    TScore score_right = {.value = 0, .y = 0, .x = X - 5};
-    Init(&racket_left, &racket_right, &ball);
-
-    int delay = 1;
-    halfdelay(delay);
-
-    int flag_game_status = flag_game_start;
+    TScore score_left = {.val = 0, .y = 0, .x = 5};
+    TScore score_right = {.val = 0, .y = 0, .x = X - 5};
+    int game_status = game_start;
     char key = ' ';
-    while (key != 'q' && flag_game_status != flag_game_end) {
-        clock_t start = clock();
+    StartGame(&racket_left, &racket_right, &ball);
+
+    while (key != '\e' && game_status != game_end) {
         DrawStaticObj(field);
+        clock_t start = clock();
         while (clock() - start < 50) {
-            CheckInput(&key, &flag_game_status, &racket_left, &racket_right,
-                       &ball);
+            key = CheckInput(&game_status, &ball);
         }
         clear();
-        if (flag_game_status != flag_game_pause) {
-            int flag_score = BallMove(&flag_game_status, &ball, racket_left,
-                                      racket_right, field);
-            (flag_score != 0)
-                ? (flag_score == 1) ? score_right.value++ : score_left.value++
-                : 0;
-            halfdelay(delay);
+        if (game_status != game_pause) {
+            RacketMove(key, &racket_left);
+            RacketMove(key, &racket_right);
+            int score = BallMove(&game_status, &ball);
+            if (score != 0) {
+                game_status = game_pause;
+                (score == left) ? score_left.val++ : score_right.val++;
+                DrawDynamicObj(field, ball, racket_left, racket_right,
+                               score_left, score_right);
+                HoldMoment(field);
+                AfterGoalMove(score, racket_left, racket_right, &ball);
+            }
+            CheckChangeDirection(&ball, racket_left, racket_right);
         } else {
-            PrintPause(field);
+            PrintText(field, "PAUSE", Y / 2, X / 2 - 3);
         }
         DrawDynamicObj(field, ball, racket_left, racket_right, score_left,
                        score_right);
-        CheckScore(&flag_game_status, score_left, score_right);
+        CheckScore(&game_status, score_left, score_right);
         FieldPrint(field);
         refresh();
     }
-    CheckWinner(field, score_left, score_right);
+    WinnerPrint(field, score_left, score_right);
     endwin();
-    FieldPrintEnd(field);
+    PrintAtExit(field);
     return 0;
 }
 
@@ -99,7 +106,7 @@ void DrawStaticObj(char field[Y][X]) {
     }
 }
 
-void Init(TRacket* racket_left, TRacket* racket_right, TBall* ball) {
+void StartGame(TRacket* racket_left, TRacket* racket_right, TBall* ball) {
     racket_left->y = Y / 2 - racket_left->size / 2;
     racket_right->y = Y / 2 - racket_right->size / 2;
 
@@ -110,28 +117,22 @@ void Init(TRacket* racket_left, TRacket* racket_right, TBall* ball) {
     ball->x = (rand_define) ? racket_left->x + 1 : racket_right->x - 1;
 }
 
-void CheckInput(char* key, int* flag_game_status, TRacket* racket_left,
-                TRacket* racket_right, TBall* ball) {
-    *key = getch();
-    if (*key == 'p') {
-        *flag_game_status = (*flag_game_status == flag_game_pause)
-                                ? flag_game_play
-                                : flag_game_pause;
+char CheckInput(int* game_status, TBall* ball) {
+    char key = getch();
+    if (key == 'p' || key == 'q') {
+        *game_status = (*game_status == game_pause) ? game_start : game_pause;
     }
-    if (*flag_game_status != flag_game_pause) {
-        MoveRacket(*key, racket_left);
-        MoveRacket(*key, racket_right);
-    }
-    if (*key == '=' && ball->speed < 5) {
+    if (key == '=' && ball->speed < 5) {
         ball->speed++;
-    } else if (*key == '-' && ball->speed > 1) {
+    } else if (key == '-' && ball->speed > 1) {
         ball->speed--;
-    } else if (*key == '0') {
+    } else if (key == '0') {
         ball->speed = 1;
     }
+    return key;
 }
 
-void MoveRacket(char key, TRacket* racket) {
+void RacketMove(char key, TRacket* racket) {
     if ((key == racket->key_up || key == racket->key_up_alt) &&
         (racket->y > 1)) {
         racket->y -= 1;
@@ -141,77 +142,60 @@ void MoveRacket(char key, TRacket* racket) {
     }
 }
 
-int BallMove(int* flag_game_status, TBall* ball, TRacket racket_left,
-             TRacket racket_right, char field[Y][X]) {
-    int flag_score = 0;
-    if (*flag_game_status != flag_game_pause) {
-        int y = ball->y + ball->speed * ball->direction_y;
-        if (y > 0 && y < Y - 1) {
-            ball->y = y;
-        } else {
-            ball->y = (y <= 0) ? 1 : Y - 2;
-        }
-
-        int x = ball->x + ball->speed * ball->direction_x;
-        if (x > -1 && x < X) {
-            ball->x = x;
-        } else {
-            ball->x = (x < 0) ? 0 : X - 1;
-        }
-    }
-    if (ball->x == 0) {  // При ударе о левую границу, победа правого игрока
-        flag_score = right;
-        AfterWinInit(ball, flag_game_status, flag_score, racket_left, field);
-    } else if (ball->x ==
-               X - 1) {  // При ударе о правую границу, победа левого игрока
-        flag_score = left;
-        AfterWinInit(ball, flag_game_status, flag_score, racket_right, field);
-    }
-    CheckChangeDirection(ball, racket_left);
-    CheckChangeDirection(ball, racket_right);
-    if (ball->y == 1 ||
-        ball->y == Y - 2) {  // При ударе о верхнюю или нижнюю границу изменение
-                             // направления по Y
-        ball->direction_y = -ball->direction_y;
-    }
+int BallMove(int* game_status, TBall* ball) {
+    (*game_status != game_pause) ? BallAutoMove(ball) : 0;
+    int flag_score = (ball->x == 0) ? right : (ball->x == X - 1) ? left : 0;
     return flag_score;
 }
 
-void AfterWinInit(TBall* ball, int* flag_game_status, int flag_score,
-                  TRacket racket, char field[Y][X]) {
-    LooseCam(field, *ball, racket);
-    *flag_game_status = flag_game_pause;
-    ball->x = (flag_score == left) ? racket.x - 1 : racket.x + 1;
-    int rand_val = rand() % racket.size;
-    ball->y = racket.y + rand_val;
-    ball->direction_y = (rand_val == racket.size / 2) ? 0
-                        : (rand_val == 0)             ? up
-                                                      : down;
-    ball->direction_x = (flag_score == left) ? left : right;
+void BallAutoMove(TBall* ball) {
+    int y = ball->y + ball->speed * ball->direction_y;
+    if (y > 0 && y < Y - 1) {
+        ball->y = y;
+    } else {
+        ball->y = (y <= 0) ? 1 : Y - 2;
+    }
+
+    int x = ball->x + ball->speed * ball->direction_x;
+    if (x > -1 && x < X) {
+        ball->x = x;
+    } else {
+        ball->x = (x < 0) ? 0 : X - 1;
+    }
 }
 
-void LooseCam(char field[Y][X], TBall ball, TRacket racket) {
-    for (int y = 0; y < Y; y++) {
-        for (int x = 0; x < X; x++) {
-            if (x == ball.x && y == ball.y) {
-                field[y][x] = ball.symbol;
-            } else if (x == racket.x && y > racket.y - 1 &&
-                       y < racket.y + racket.size) {
-                field[y][x] = racket.symbol;
-            }
-        }
-    }
+void HoldMoment(char field[Y][X]) {
     clear();
+    PrintText(field, "<<<GOAL>>>", Y / 2, X / 2 - 5);
     FieldPrint(field);
     clock_t start = clock();
     refresh();
     while ((clock() - start) / CLOCKS_PER_SEC < 2) {
         continue;
     }
+    clear();
 }
 
-void CheckChangeDirection(TBall* ball, TRacket racket) {
-    // При ударе о ракетку
+void AfterGoalMove(int score, TRacket racket_left, TRacket racket_right,
+                   TBall* ball) {
+    TRacket racket = (score == right) ? racket_left : racket_right;
+    ball->x = (score == left) ? racket.x - 1 : racket.x + 1;
+    int rand_val = rand() % racket.size;
+    ball->y = racket.y + rand_val;
+    ball->direction_y = (rand_val == racket.size / 2) ? 0
+                        : (rand_val == 0)             ? up
+                                                      : down;
+    ball->direction_x = (score == left) ? left : right;
+}
+
+void CheckChangeDirection(TBall* ball, TRacket racket_left,
+                          TRacket racket_right) {
+    CheckTouchRacket(ball, racket_left);
+    CheckTouchRacket(ball, racket_right);
+    CheckTouchBorder(ball);
+}
+
+void CheckTouchRacket(TBall* ball, TRacket racket) {
     int knock_zone = (racket.x > X / 2) ? racket.x - 1 : racket.x + 1;
     if ((ball->x == knock_zone) &&
         (ball->y > racket.y - 1 && ball->y < racket.y + racket.size)) {
@@ -228,11 +212,16 @@ void CheckChangeDirection(TBall* ball, TRacket racket) {
     }
 }
 
-void PrintPause(char field[Y][X]) {
-    char* pause = "PAUSE";
+void CheckTouchBorder(TBall* ball) {
+    if (ball->y == 1 || ball->y == Y - 2) {
+        ball->direction_y = -ball->direction_y;
+    }
+}
+
+void PrintText(char field[Y][X], char* text, int y, int x_start) {
     int i = 0;
-    for (int x = X / 2 - 3; pause[i] != '\0'; x++, i++) {
-        field[Y / 2][x] = pause[i];
+    for (int x = x_start; text[i] != '\0'; x++, i++) {
+        field[y][x] = text[i];
     }
 }
 
@@ -259,12 +248,12 @@ void DrawDynamicObj(char field[Y][X], TBall ball, TRacket racket_left,
 }
 
 void DrawScore(char field[Y][X], int y, int x, TScore score) {
-    if (score.value < 10) {
+    if (score.val < 10) {
         field[y][x - 1] = '0';
-        field[y][x] = score.value + '0';
+        field[y][x] = score.val + '0';
     } else {
-        field[y][x - 1] = score.value / 10 + '0';
-        field[y][x] = score.value % 10 + '0';
+        field[y][x - 1] = score.val / 10 + '0';
+        field[y][x] = score.val % 10 + '0';
     }
 }
 
@@ -277,32 +266,30 @@ void FieldPrint(char field[Y][X]) {
     }
 }
 
-void CheckScore(int* flag_game_status, TScore score_left, TScore score_right) {
+void CheckScore(int* game_status, TScore score_left, TScore score_right) {
     int max_score = 21;
-    if (score_right.value == max_score || score_left.value == max_score) {
-        *flag_game_status = flag_game_end;
+    if (score_right.val == max_score || score_left.val == max_score) {
+        *game_status = game_end;
     }
 }
 
-void CheckWinner(char field[Y][X], TScore score_left, TScore score_right) {
-    int i = 0, offset;
+void WinnerPrint(char field[Y][X], TScore score_left, TScore score_right) {
+    int offset;
     char* phrase;
-    if (score_left.value > score_right.value) {
+    if (score_left.val > score_right.val) {
         phrase = "YOU WON!";
         offset = X / 4 + 3;
-    } else if (score_right.value > score_left.value) {
+    } else if (score_right.val > score_left.val) {
         phrase = "YOU WON!";
         offset = -X / 2 + X / 4 + 5;
     } else {
         phrase = "DRAW!!!";
         offset = 3;
     }
-    for (int x = X / 2 - offset; phrase[i] != '\0'; x++, i++) {
-        field[Y / 2][x] = phrase[i];
-    }
+    PrintText(field, phrase, Y / 2, X / 2 - offset);
 }
 
-void FieldPrintEnd(char field[Y][X]) {
+void PrintAtExit(char field[Y][X]) {
     for (int y = 0; y < Y; y++) {
         for (int x = 0; x < X; x++) {
             printf("%c", field[y][x]);
