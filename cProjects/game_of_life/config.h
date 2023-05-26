@@ -8,8 +8,8 @@
 #include <time.h>
 
 #define Y 25
-#define X 80
-#define symbol_alive '#'
+#define X 150
+#define symbol_alive '1'
 #define symbol_empty ' '
 #define key_speed_up 'a'
 #define key_speed_up_alt 'A'
