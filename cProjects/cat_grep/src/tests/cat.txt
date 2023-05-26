@@ -1,0 +1,15 @@
+50_english_jokes.txt
+-s 50_english_jokes.txt
+-n 50_english_jokes.txt
+-b 50_english_jokes.txt
+-nb 50_english_jokes.txt
+-n -b 50_english_jokes.txt
+-s 50_english_jokes.txt
+-s 50_english_jokes.txt show_tabs.txt
+-bs 50_english_jokes.txt ../cat/s21_cat.h
+-bs -sb 50_english_jokes.txt ../cat/s21_cat.h ../cat/s21_cat.c 
+-t show_tabs.txt
+-e show_tabs.txt
+-te test_case_cat.txt
+-v test_case_cat.txt
+-bestv test_case_cat.txt ../cat/s21_cat.h show_tabs.txt 

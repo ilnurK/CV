@@ -1,0 +1,55 @@
+two 50_english_jokes.txt
+' ' 50_english_jokes.txt
+-i two 50_english_jokes.txt
+-in two 50_english_jokes.txt
+-vin two 50_english_jokes.txt
+-i -n two 50_english_jokes.txt
+-in -v two 50_english_jokes.txt
+-in -v two 50_english_jokes.txt ../grep/s21_grep.h
+-c two 50_english_jokes.txt
+-vinc two 50_english_jokes.txt
+-l two 50_english_jokes.txt
+'two kids' 50_english_jokes.txt show_tabs.txt
+two 50_english_jokes.txt show_tabs.txt
+-c ab 50_english_jokes.txt show_tabs.txt
+-l ab 50_english_jokes.txt show_tabs.txt
+-lc two 50_english_jokes.txt show_tabs.txt
+-lc two 50_english_jokes.txt 
+-e two 50_english_jokes.txt
+-e two -e ab 50_english_jokes.txt
+-e two -e ab 50_english_jokes.txt show_tabs.txt
+-h ab 50_english_jokes.txt show_tabs.txt
+-hc ab 50_english_jokes.txt show_tabs.txt
+-s ab 50_english_jokes.txt show_tabs
+-on ab 50_english_jokes.txt 
+-on ab 50_english_jokes.txt show_tabs.txt
+-von ab 50_english_jokes.txt 
+-cvion ab 50_english_jokes.txt
+'[tT]wo' 50_english_jokes.txt
+-f file_reg.txt 50_english_jokes.txt
+-f file_reg.txt -e ab 50_english_jokes.txt
+-f file_reg.txt -e ab 50_english_jokes.txt show_tabs.txt
+-o '[aA][bB]' 50_english_jokes.txt show_tabs.txt
+-no '[aA][bB]' show_tabs.txt 
+-n for ../new_tests/test_1_grep.txt ../new_tests/test_2_grep.txt
+-n for ../new_tests/test_1_grep.txt
+-n -e ^\} ../new_tests/test_1_grep.txt
+-ce ^int ../new_tests/test_1_grep.txt ../new_tests/test_2_grep.txt
+-e ^int ../new_tests/test_1_grep.txt
+-nivh = ../new_tests/test_1_grep.txt ../new_tests/test_2_grep.txt
+-ie INT ../new_tests/test_5_grep.txt
+-echar ../new_tests/test_1_grep.txt ../new_tests/test_2_grep.txt
+-ne = -e out ../new_tests/test_5_grep.txt
+-iv int ../new_tests/test_5_grep.txt
+-in int ../new_tests/test_5_grep.txt
+-v ../new_tests/test_1_grep.txt -e ank
+-l for ../new_tests/test_1_grep.txt ../new_tests/test_2_grep.txt
+-o -e int ../new_tests/test_4_grep.txt 
+-e = -e out ../new_tests/test_5_grep.txt
+-e ing -e as -e the -e not -e is ../new_tests/test_6_grep.txt
+-c -e . ../new_tests/test_1_grep.txt -e '.'
+-f ../tests/file_reg.txt ../new_tests/test_5_grep.txt
+for ../grep/s21_grep.c ../grep/s21_grep.h ../grep/Makefile 
+for ../grep/s21_grep.c 
+-e for -e ^int ../grep/s21_grep.c ../grep/s21_grep.h ../grep/Makefile 
+-e for -e ^int ../grep/s21_grep.c 
