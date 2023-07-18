@@ -3,7 +3,7 @@ flags = -Wall -Werror -Wextra -lncurses
 all: build
 
 build:
-	gcc pong2.c $(flags)
+	gcc pong2.c $(flags) -o pong
 
 clean:
 	rm -rf *.o a.out
