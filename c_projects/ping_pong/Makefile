@@ -1,12 +1,14 @@
-flags = -Wall -Werror -Wextra -lncurses
+CC := gcc
+FLAGS := -Wall -Werror -Wextra -std=c11 -lncurses
+TARG = pong
 
 all: build
 
 build:
-	gcc pong2.c $(flags) -o pong
+	$(CC) $(TARG).c $(FLAGS) -o $(TARG)
 
 clean:
-	rm -rf *.o a.out
+	rm -rf *.o $(TARG)
 
 cppcheck:
-	cppcheck --enable=all --suppress=missingIncludeSystem pong2.c
+	cppcheck --enable=all --suppress=missingIncludeSystem $(TARG).c
