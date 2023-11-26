@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 
-// 1
 int s21_abs(int x) {
   if (x < 0) {
     x *= -1;
@@ -10,7 +9,6 @@ int s21_abs(int x) {
   return x;
 }
 
-// 2
 long double s21_acos(double x) {
   long double res;
   if (!x) {
@@ -23,7 +21,6 @@ long double s21_acos(double x) {
   return res;
 }
 
-// 3
 long double s21_asin(double x) {
   long double res;
   if (x == -1) {
@@ -42,7 +39,6 @@ long double s21_asin(double x) {
   return res;
 }
 
-// 4
 long double s21_atan(double x) {
   long double res = 0.0;
   if (S21_IS_ZERO(x)) {
@@ -79,7 +75,6 @@ long double s21_atan_1to1(double x) {
   return res;
 }
 
-// 5
 long double s21_ceil(double x) {
   long double res;
   if (x == S21_INF) {
@@ -97,7 +92,6 @@ long double s21_ceil(double x) {
   return res;
 }
 
-// 6
 long double s21_cos(double x) {
   x = s21_fmod(x, 2 * S21_PI);
   long double cos = 1;
@@ -115,7 +109,6 @@ long double s21_cos(double x) {
   return cos;
 }
 
-// 7
 long double s21_exp(double x) {
   long double res = 1.0;
   if (x > 100) {
@@ -136,7 +129,6 @@ long double s21_exp(double x) {
   return res;
 }
 
-// 8
 long double s21_fabs(double x) {
   if (x < 0) {
     x *= -1;
@@ -144,7 +136,6 @@ long double s21_fabs(double x) {
   return x;
 }
 
-// 9
 long double s21_floor(double x) {
   long double res;
   if (x == S21_INF) {
@@ -161,7 +152,6 @@ long double s21_floor(double x) {
   return res;
 }
 
-// 10
 long double s21_fmod(double x, double y) {
   long double res;
   if (x == S21_INF || x == S21_NINF) {
@@ -174,7 +164,6 @@ long double s21_fmod(double x, double y) {
   return res;
 }
 
-// 11
 long double s21_log(double x) {
   long double res = 0, y = 0;
   if (x < 0.0) {
@@ -193,7 +182,6 @@ long double s21_log(double x) {
   return res;
 }
 
-// 12
 long double s21_pow(double base, double exp) {
   long double res;
   if (S21_IS_ZERO(exp) || (base == -1 && (exp == S21_INF || exp == S21_NINF))) {
@@ -255,7 +243,6 @@ long double s21_sin(double x) {
   return sin;
 }
 
-// 14
 long double s21_sqrt(double x) {
   long double res;
   long double x0 = x;
@@ -276,7 +263,6 @@ long double s21_sqrt(double x) {
   return res;
 }
 
-// 15
 long double s21_tan(double x) {
   long double result;
   if (x == S21_PI / 2) {

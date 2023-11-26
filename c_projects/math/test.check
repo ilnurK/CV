@@ -3,7 +3,6 @@
 
 #include "s21_math.h"
 
-//13
 #test sintest
   ck_assert(sin(S21_PI) - s21_sin(S21_PI) < S21_EPS);
   ck_assert(sin(S21_EPS) - s21_sin(S21_EPS) < S21_EPS);  
@@ -18,7 +17,6 @@
   ck_assert(sin(-55 * S21_PI / 2) - s21_sin(-55 * S21_PI / 2)< S21_EPS);
   ck_assert(sin(0.7 * S21_PI / 2) - s21_sin(0.7 * S21_PI / 2)< S21_EPS);
 
-//14
 #test sqrttest
   ck_assert(sqrt(S21_PI/ 2) - s21_sqrt(S21_PI / 2)< S21_EPS);
   ck_assert_ldouble_infinite(sqrt(S21_INF));
@@ -33,7 +31,6 @@
   ck_assert(sqrt(67 * S21_PI / 2) - s21_sqrt(67 * S21_PI / 2)< S21_EPS);
   ck_assert(sqrt(0.7 * S21_PI / 2) - s21_sqrt(0.7 * S21_PI / 2)< S21_EPS);
 
-//15
 #test tantest
   ck_assert(tan(S21_PI/ 3) - s21_tan(S21_PI / 3)< S21_EPS);
   ck_assert(tan(S21_PI/ 2.0159) - s21_tan(S21_PI / 2.0159)< S21_EPS);

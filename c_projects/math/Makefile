@@ -1,5 +1,6 @@
 CC := gcc
 CC_FLAGS := -std=c11 -Wall -Werror -Wextra
+FILES := s21_*.c
 LIB := s21_math.a
 TEST := tests.c
 MATH := -lm
@@ -13,7 +14,6 @@ else
     CHECK_LIBS = -lcheck -lm -lpthread
 endif
 
-FILES := s21_*.c
 
 all: clean $(LIB)
 
