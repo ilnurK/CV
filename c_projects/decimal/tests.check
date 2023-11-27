@@ -1,0 +1,1317 @@
+#include "s21_decimal.h"
+
+#test add_wo_exp
+  s21_decimal a, b, c = {0};
+  int total;
+  char str[99];
+  for (unsigned int i = UINT_MAX / 2 - 1000, j = 0, k = UINT_MAX / 2;
+      i < UINT_MAX / 2; i++, j++, k--) {
+    s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+    s21_setBinaryValue(&a, 0, 0, i, j, k);
+    s21_setBinaryValue(&b, 0, 0, k, i, j);
+    total = s21_add(a, b, &c);
+    int cond1 = (c.bits[0] == a.bits[0] + b.bits[0]);
+    int cond2 = (c.bits[1] == a.bits[1] + b.bits[1]);
+    int cond3 = (c.bits[2] == a.bits[2] + b.bits[2]);
+    ck_assert(cond1 && cond2 && cond3);
+    ck_assert(!total);
+  }
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  total = s21_add(a, b, &c);
+  ck_assert(c.bits[0] == 0 && c.bits[1] == 1 && c.bits[2] == 0);
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, 0, 0);
+  total = s21_add(a, b, &c);
+  ck_assert(c.bits[0] == UINT_MAX - 1 && c.bits[1] == 1 && c.bits[2] == 0);
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, UINT_MAX, 0);
+  total = s21_add(a, b, &c);
+  ck_assert(c.bits[0] == UINT_MAX - 1 && c.bits[1] == UINT_MAX && c.bits[2] == 1);
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  total = s21_add(a, b, &c);
+  ck_assert(total == 1);
+
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 1, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  total = s21_add(a, b, &c);
+  ck_assert(c.bits[0] == 0 && c.bits[1] == 0 && c.bits[2] == 0);
+  ck_assert(total == 0);
+
+  s21_setBinaryValue(&a, 1, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  total = s21_add(a, b, &c);
+  ck_assert(c.bits[0] == 0 && c.bits[1] == 0 && c.bits[2] == 0);
+  ck_assert(total == 0);
+
+  s21_setBinaryValue(&a, 1, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 1, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  total = s21_add(a, b, &c);
+  ck_assert(total == 2);
+
+  s21_setBinaryValue(&a, 0, 1, 2, 2, UINT_MAX / 10);
+  s21_setBinaryValue(&b, 0, 10, 1000000, 0, 0);
+  total = s21_add(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111110100000000000000000000000000001"
+                    "010000000000000000000000000000010100");
+  ck_assert(total == 0);
+
+  s21_setBinaryValue(&a, 0, 1, 2, 2, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 2, 1, 0, 0);
+  total = s21_add(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111110000000000000000000000000000"
+                    "001000000000000000000000000000000010");
+  ck_assert(total == 0);
+
+  s21_setBinaryValue(&a, 0, 1, 2, 2, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 2, 5, 0, 0);
+  total = s21_add(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111110000000000000000000000000000"
+                    "001000000000000000000000000000000011");
+  ck_assert(total == 0);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX - 1, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 1, 6, 0, 0);
+  total = s21_add(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111111111111111111111111111111111"
+                    "111111111111111111111111111111111111");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX - 1, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&a, 0, 1, 6, 0, 0);
+  total = s21_add(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111111111111111111111111111111111"
+                    "111111111111111111111111111111111111");
+  ck_assert(!total);
+
+  s21_decimal egor = {.bits = {0b11001001001010101010101001010101,
+                            0b10001000010101111010111110111101, 0b00000000001110001111110010010000, 0b10000000000000000000000000000000}};
+  s21_decimal vitalik = {.bits = {0b00001000110111110111110111101110, 0b00000000001100110010100100010001, 0, 0}};
+  s21_decimal love;
+  ck_assert_int_eq(s21_add(egor, vitalik, &love), 0);
+  ck_assert_int_eq(love.bits[0], 3226152039);
+  ck_assert_int_eq(love.bits[1], 2284095148);
+  ck_assert_int_eq(love.bits[2], 3734672);
+  ck_assert_int_eq(love.bits[3], 2147483648);
+
+#test sub_wo_exp
+  s21_decimal a = {0}, b = {0}, c = {0};
+  int total = 0;
+  char str[99];
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 0, 1, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  total = s21_sub(a, b, &c);
+  ck_assert(c.bits[0] == UINT_MAX && c.bits[1] == 0 && c.bits[2] == 0);
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 0, 0, 1);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  total = s21_sub(a, b, &c);
+  ck_assert(c.bits[0] == UINT_MAX && c.bits[1] == UINT_MAX && c.bits[2] == 0);
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 0, 1, 1);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, 0, 0);
+  total = s21_sub(a, b, &c);
+  ck_assert(c.bits[0] == 1 && c.bits[1] == 0 && c.bits[2] == 1);
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX - 1, 1, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, 0, 0);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "11111111111111111111111111111111");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 1, 6, 0, 0);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111111111111111111111111111111111"
+                    "111111111111111111111111111111111110");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&a, 0, 1, 6, 0, 0);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111111111111111111111111111111111"
+                    "111111111111111111111111111111111110");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 0, 0, 0);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  s21_setSign(&a, MINUS);
+  s21_setSign(&b, MINUS);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  s21_setSign(&a, MINUS);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "10");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  s21_setSign(&b, MINUS);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "10");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 2, 0, 0);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+  ck_assert(!total);
+
+  s21_setBinaryValue(&c, 0, 0, 0, 0, 0);
+  s21_setBinaryValue(&a, 0, 0, 3, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 5, 0, 0);
+  s21_setSign(&a, MINUS);
+  s21_setSign(&b, MINUS);
+  total = s21_sub(a, b, &c);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "10");
+  ck_assert(!total);
+
+#test mulTen
+  s21_decimal a = {0};
+  char str[99];
+  s21_setBinaryValue(&a, 0, 0, 6, 130, 49);
+  s21_mulTen(&a);
+  s21_decToStr(a, str);
+  ck_assert_pstr_eq(str,
+                    "111101010000000000000000000000101000101000000000000000000000"
+                    "0000000111100");
+
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, 5);
+  s21_mulTen(&a);
+  s21_decToStr(a, str);
+  ck_assert_pstr_eq(
+      str,
+      "1110111111111111111111111111111111111111111111111111111111111111110110");
+
+#test commonDenominator
+  s21_decimal a = {0}, b = {0};
+  char str[99];
+  s21_setBinaryValue(&a, 0, 5, 6, 1, 9);
+  s21_setBinaryValue(&b, 0, 12, 34, 3, 4);
+  s21_bringToCommDenom(&a, &b);
+  ck_assert(s21_getDecPow(a) == 12 && s21_getDecPow(b) == 12);
+  s21_decToStr(a, str);
+  ck_assert_pstr_eq(str,
+                    "101010111010100101010000000000000001001100010010110100000000"
+                    "0000011100100111000011100000000");
+
+  s21_setBinaryValue(&a, 0, 5, 6, 1, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 12, 10000000, 10000000, 10000000);
+  s21_bringToCommDenom(&a, &b);
+  ck_assert(s21_getDecPow(a) == 5 && s21_getDecPow(b) == 5);
+  s21_decToStr(b, str);
+  ck_assert_pstr_eq(
+      str, "10000000000000000000000000000000100000000000000000000000000000001");
+
+  s21_setBinaryValue(&a, 0, 5, 6, 1, UINT_MAX / 200);
+  s21_setBinaryValue(&b, 0, 12, 10000011, 10000011, 10000011);
+  s21_bringToCommDenom(&a, &b);
+  ck_assert(s21_getDecPow(a) == 7 && s21_getDecPow(b) == 7);
+  s21_decToStr(a, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111101000000000000000000000000000001100"
+                    "10000000000000000000000001001011000");
+  s21_decToStr(b, str);
+  ck_assert_pstr_eq(
+      str,
+      "11001000000000000000111001101011110001001100111000101010110000111110101");
+
+  s21_setBinaryValue(&a, 0, 5, 6, 1, UINT_MAX / 200);
+  s21_setBinaryValue(&b, 0, 28, 13, 0, 0);
+  int overflow = s21_bringToCommDenom(&a, &b);
+  ck_assert(s21_getDecPow(a) == 7 && s21_getDecPow(b) == 27);
+  ck_assert(overflow == 1);
+  s21_decToStr(a, str);
+  s21_decToStr(b, str);
+  ck_assert_pstr_eq(str, "1");
+
+  s21_setBinaryValue(&a, 0, 7, 6, 0, 0);
+  s21_setBinaryValue(&b, 0, 28, 1, 0, 0);
+  s21_bringToCommDenom(&a, &b);
+  ck_assert(s21_getDecPow(a) == 28 && s21_getDecPow(b) == 28);
+  s21_decToStr(a, str);
+  ck_assert_pstr_eq(str,
+                    "101000101010000101011101000010010101000110011011111000000000"
+                    "0000000000000");
+  s21_decToStr(b, str);
+  ck_assert_pstr_eq(str, "1");
+
+#test mul
+  s21_decimal a, b, c = {0};
+  char str[99];
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, 1, 0);
+  int score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(
+      str, "11111111111111111111111111111110100000000000000000000000000000001");
+
+  s21_setBinaryValue(&a, 0, 0, 325351, 64, 0);
+  s21_setBinaryValue(&b, 0, 0, 49632, 12953, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "110010100110010000001111101101100001001001100001001011000010"
+                    "011111000011000100100000");
+
+  s21_setBinaryValue(&a, 0, 5, UINT_MAX, UINT_MAX, 0);
+  s21_setBinaryValue(&b, 0, 7, UINT_MAX, 2, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "100110011001100110011001100110010110011001100110011001100110"
+                    "01011100110011001100110011001100110");
+
+  s21_setBinaryValue(&a, 0, 8, UINT_MAX, UINT_MAX, 0);
+  s21_setBinaryValue(&b, 0, 8, UINT_MAX, UINT_MAX, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 6);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "110110111110011011111110110011101011110111101101110101011011"
+                    "11001111110110100101010001100111000");
+
+  s21_setBinaryValue(&a, 0, 28, 1234, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(c.bits[LOW] == 1234);
+  ck_assert(s21_getDecPow(c) == 28);
+
+  s21_setBinaryValue(&a, 0, 28, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 15, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(c.bits[LOW] == 15);
+  ck_assert(s21_getDecPow(c) == 28);
+
+  // 52763013798776872511541976927.2
+  s21_setBinaryValue(&a, 0, 7, 123456, 9876543, 34);
+  s21_setBinaryValue(&b, 0, 7, 1991911, 76743727, 456);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "1010101001111100100010101100010101100000001101100010110"
+                    "10001110011111001000100011001111101011111");
+
+  // 527630137987768725115419.7
+  s21_setBinaryValue(&a, 0, 15, 123456, 9876543, 34);
+  s21_setBinaryValue(&b, 0, 32, 1991911, 76743727, 456);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "11011111011101011100011000110001001001110011000001111"
+                    "01101011011001001000011100");
+
+  // 52763013798776872511541.9
+  s21_setBinaryValue(&a, 0, 16, 123456, 9876543, 34);
+  s21_setBinaryValue(&b, 0, 32, 1991911, 76743727, 456);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "1011001011000100100111101000110110111000111100111001010"
+                    "111100010100000110110");
+
+  // 5276301379877687251154.1
+  s21_setBinaryValue(&a, 0, 17, 123456, 9876543, 34);
+  s21_setBinaryValue(&b, 0, 32, 1991911, 76743727, 456);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "1000111100000011101100100"
+                    "000101011111010010111000111011111101000011010010");
+
+  // 527630137987768725115.4
+  s21_setBinaryValue(&a, 0, 18, 123456, 9876543, 34);
+  s21_setBinaryValue(&b, 0, 32, 1991911, 76743727, 456);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "11100100110100101011"
+                    "0110011101111111011011111010010110010111001111011");
+
+  // 52763013798776872.5
+  s21_setBinaryValue(&a, 0, 22, 123456, 9876543, 34);
+  s21_setBinaryValue(&b, 0, 32, 1991911, 76743727, 456);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "1011101101110011101011100"
+                    "1110110110000010101000000101000");
+
+  s21_setBinaryValue(&a, 0, 28, 1252, 0, 0);
+  s21_setBinaryValue(&b, 0, 5, 0, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 28, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 1, 1, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 28, 19, 0, 0);
+  s21_setBinaryValue(&b, 0, 12, 13, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 14, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 14, 1, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+
+  s21_setBinaryValue(&a, 0, 15, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 14, 1, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 15, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 14, 1, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 1, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 1, 1, UINT_MAX, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 2);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 13, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 16, 6, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+
+  s21_setBinaryValue(&a, 0, 15, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 15, 6, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 29, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 25, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "10");
+
+  s21_setBinaryValue(&a, 0, 29, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 35, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "100");
+
+  s21_setBinaryValue(&a, 0, 29, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 1, 35, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 29, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 1, 350, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "100");
+
+  s21_setBinaryValue(&a, 0, 29, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 1, 250, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "10");
+
+  s21_setBinaryValue(&a, 0, 29, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 250, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 28);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "11001");
+
+  s21_setBinaryValue(&a, 0, 1, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 0, 6, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "100110011001100110011001100110011001100110011"
+                    "001100110011001100110011001100110011001100110011001");
+
+  s21_setBinaryValue(&a, 0, 20, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 3, 106, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 20);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(
+      str,
+      "11011001000101101000011100101011000000100000110001001001101110"
+      "1001011110001101010011111110000");
+
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 3, 106, 0, 0);
+  score = s21_mul(a, b, &c);
+  ck_assert(score == 0);
+  ck_assert(s21_getDecPow(c) == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(
+      str,
+      "110110010001011010000111001010110000001000001100010010011011101"
+      "001011110001101010011111110000");
+
+  s21_decimal afanasyi = {.bits = {0b11111111111111111111111111111110,
+                            0b11010101010101010101010101001111, 0, 0}};
+  s21_decimal benedict = {.bits = {0b10100101011000000001101111111010, 0, 0, 0}};
+  ck_assert_int_eq(s21_mul(afanasyi, benedict, &c), 0);
+  ck_assert(s21_getDecPow(c) == 0);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(
+       str,
+      "100010011101000000010111010011001110001101010100110000000001111010110101001111111100100000001100");
+
+#test div
+  s21_decimal a, b, c = {0};
+  char str[99];
+  int power = 0;
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, UINT_MAX, 1, 0);
+  int total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "10000001001111110011100101111000101101111111010001101"
+                    "1001100011110100011011001100010110011100");
+
+  s21_setBinaryValue(&a, 0, 7, 141424, 7564754, 1421421);
+  s21_setBinaryValue(&b, 0, 4, 4255, 1, 92572593);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "10000010000011110001111001100101111010110111111011010"
+                    "0110011011001101101100110");
+
+  s21_setBinaryValue(&a, 0, 1, 141424, 7564754, 1421421);
+  s21_setBinaryValue(&b, 0, 10, 4255, 1, 92572593);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "1100011001110100010100011100001001000100011101100110010"
+                    "100001000111011001111110010001011010100");
+
+  s21_setBinaryValue(&a, 0, 0, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 1, 1, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1010");
+  power = s21_getDecPow(c);
+  ck_assert(power == 0);
+
+  s21_setBinaryValue(&a, 0, 5, 1, 0, 0);
+  s21_setBinaryValue(&b, 0, 6, 1, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1010");
+  power = s21_getDecPow(c);
+  ck_assert(power == 0);
+
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111111111111111111111111111111111"
+                    "111111111111111111111111111111111111");
+  power = s21_getDecPow(c);
+  ck_assert(power == 0);
+
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_setBinaryValue(&b, 0, 1, 1, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(total == 1);
+
+  s21_setBinaryValue(&a, 0, 5, 8, 0, 0);
+  s21_setBinaryValue(&b, 0, 28, 4, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str,
+                    "10101001011010000001011000111111000010100101011110110"
+                    "1000000000000000000000000");
+  power = s21_getDecPow(c);
+  ck_assert(power == 0);
+
+  s21_setBinaryValue(&a, 0, 5, 8, 0, 0);
+  s21_setBinaryValue(&b, 0, 28, 0, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(total == 3);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 5, 8, 0, 0);
+  s21_setBinaryValue(&b, 0, 0, 1, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1000");
+
+  s21_setBinaryValue(&a, 0, 5, 8, 0, 0);
+  s21_setBinaryValue(&b, 0, 5, 8, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+
+  s21_setBinaryValue(&a, 0, 10, 0, 0, 0);
+  s21_setBinaryValue(&b, 0, 5, 8, 0, 0);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "");
+
+  s21_setBinaryValue(&a, 0, 5, 8, 0, 0);
+  s21_setBinaryValue(&b, 0, 5, 8, 0, 0);
+  s21_setSign(&a, MINUS);
+  total = s21_div(a, b, &c);
+  ck_assert(!total);
+  s21_decToStr(c, str);
+  ck_assert_pstr_eq(str, "1");
+
+#test decToStr
+  s21_decimal a;
+  char str[99];
+  s21_setBinaryValue(&a, 0, 0, UINT_MAX, UINT_MAX, UINT_MAX);
+  s21_decToStr(a, str);
+  ck_assert_pstr_eq(str,
+                    "111111111111111111111111111111111111111111111111111111111111"
+                    "111111111111111111111111111111111111");
+  s21_decimal b = s21_strToDec(str);
+  for (int i = LOW; i <= HIGH; i++) {
+    ck_assert(a.bits[i] == b.bits[i]);
+  }
+
+#test is_equal
+  s21_decimal src1 = {.bits = {2, 0, 0, 0}};
+  s21_decimal src2 = {.bits = {3, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_equal(src1, src2), 0);
+
+  s21_decimal src3 = {.bits = {8, 0, 0, 0}};
+  s21_decimal src4 = {.bits = {8, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_equal(src3, src4), 1);
+
+  s21_decimal src5 = {.bits = {0, 0, 0, 0}};
+  s21_decimal src6 = {.bits = {0, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_equal(src5, src6), 1);
+
+  s21_decimal src7 = {.bits = {1, 2, 0, 0}};
+  s21_decimal src8 = {.bits = {1, 2, 0, 0}};
+  ck_assert_int_eq(s21_is_equal(src7, src8), 1);
+
+  s21_decimal src9 = {.bits = {1, 1, 0, 0}};
+  s21_decimal src10 = {.bits = {1, 2, 0, 0}};
+  ck_assert_int_eq(s21_is_equal(src9, src10), 0);
+
+  s21_decimal src11 = {.bits = {1, 2, 1, 0}};
+  s21_decimal src12 = {.bits = {1, 2, 1, 0}};
+  ck_assert_int_eq(s21_is_equal(src11, src12), 1);
+
+  s21_decimal src13 = {.bits = {1, 2, 3, 0}};
+  s21_decimal src14 = {.bits = {1, 2, 1, 0}};
+  ck_assert_int_eq(s21_is_equal(src13, src14), 0);
+
+  s21_decimal src15 = {.bits = {1, 0, 0, 2147483648}};  //-1
+  s21_decimal src16 = {.bits = {1, 0, 0, 2147483648}};  //-1
+  ck_assert_int_eq(s21_is_equal(src15, src16), 1);
+
+  s21_decimal src17 = {.bits = {1, 0, 0, 0}};           // 1
+  s21_decimal src18 = {.bits = {1, 0, 0, 2147483648}};  // -1
+  ck_assert_int_eq(s21_is_equal(src17, src18), 0);
+
+  s21_decimal src19 = {.bits = {1230, 0, 0, 131072}};  // 1230 / 10^2
+  s21_decimal src20 = {.bits = {123, 0, 0, 65536}};    // 123 / 10^1
+  ck_assert_int_eq(s21_is_equal(src19, src20), 1);
+
+  s21_decimal src21 = {.bits = {123, 1, 0, 131072}};  // 123 / 10^2
+  s21_decimal src22 = {.bits = {123, 0, 0, 65536}};   // 123 / 10^1
+  ck_assert_int_eq(s21_is_equal(src21, src22), 0);
+
+  s21_decimal src23 = {.bits = {123, 0, 0, 131072}};  // 123 / 10^2
+  s21_decimal src24 = {.bits = {123, 0, 0, 65536}};   // 123 / 10^1
+  ck_assert_int_eq(s21_is_equal(src23, src24), 0);
+
+  s21_decimal src25 = {.bits = {123, 0, 1, 131072}};  // 123 / 10^2
+  s21_decimal src26 = {.bits = {123, 0, 0, 65536}};   // 123 / 10^1
+  ck_assert_int_eq(s21_is_equal(src25, src26), 0);
+
+  s21_decimal src27 = {.bits = {123, 0, 1, 131072}};  // 123 / 10^2
+  s21_decimal src28 = {.bits = {123, 0, 0, 65536}};   // 123 / 10^1
+  ck_assert_int_eq(s21_is_equal(src27, src28), 0);
+
+  s21_decimal src29 = {.bits = {123, 0, 1, 131072}};  // 123 / 10^2
+  s21_decimal src30 = {.bits = {123, 0, 1, 65536}};   // 123 / 10^1
+  ck_assert_int_eq(s21_is_equal(src29, src30), 0);
+
+#test is_not_equal
+  s21_decimal src1 = {.bits = {2, 0, 0, 0}};
+  s21_decimal src2 = {.bits = {3, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_not_equal(src1, src2), 1);
+
+  s21_decimal src3 = {.bits = {8, 0, 0, 0}};
+  s21_decimal src4 = {.bits = {8, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_not_equal(src3, src4), 0);
+
+#test is_greater
+  s21_decimal src1 = {.bits = {3, 0, 0, 0}};
+  s21_decimal src2 = {.bits = {2, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_greater(src1, src2), 1);
+
+  s21_decimal src3 = {.bits = {8, 0, 0, 0}};
+  s21_decimal src4 = {.bits = {8, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_greater(src3, src4), 0);
+
+  s21_decimal src5 = {.bits = {1, 0, 0, 0}};           // 1
+  s21_decimal src6 = {.bits = {1, 0, 0, 2147483648}};  // -1
+  ck_assert_int_eq(s21_is_greater(src5, src6), 1);
+
+  s21_decimal src7 = {.bits = {1, 0, 0, 2147483648}};  // -1
+  s21_decimal src8 = {.bits = {1, 0, 0, 0}};           // 1
+  ck_assert_int_eq(s21_is_greater(src7, src8), 0);
+
+  s21_decimal src9 = {.bits = {17, 0, 0, 2147483648}};   // -17
+  s21_decimal src10 = {.bits = {17, 0, 0, 2147483648}};  // -17
+  ck_assert_int_eq(s21_is_greater(src9, src10), 0);
+
+  s21_decimal src11 = {.bits = {16, 0, 0, 2147483648}};  // -16
+  s21_decimal src12 = {.bits = {17, 0, 0, 2147483648}};  // -17
+  ck_assert_int_eq(s21_is_greater(src11, src12), 1);
+
+  s21_decimal src13 = {.bits = {225, 1, 0, 2147483648}};
+  s21_decimal src14 = {.bits = {225, 0, 0, 2147483648}};
+  ck_assert_int_eq(s21_is_greater(src13, src14), 0);
+
+  s21_decimal src15 = {.bits = {225, 1, 2, 2147483648}};
+  s21_decimal src16 = {.bits = {225, 1, 0, 2147483648}};
+  ck_assert_int_eq(s21_is_greater(src15, src16), 0);
+
+  s21_decimal src17 = {.bits = {23, 0, 0, 2147483648}};
+  s21_decimal src18 = {.bits = {23, 0, 0, 2147549184}};
+  ck_assert_int_eq(s21_is_greater(src17, src18), 0);
+
+  s21_decimal src19 = {.bits = {23, 1, 0, 2147483648}};
+  s21_decimal src20 = {.bits = {23, 0, 0, 2147549184}};
+  ck_assert_int_eq(s21_is_greater(src19, src20), 0);
+
+  s21_decimal src21 = {.bits = {23, 1, 4, 2147483648}};
+  s21_decimal src22 = {.bits = {23, 1, 0, 2147549184}};
+  ck_assert_int_eq(s21_is_greater(src21, src22), 0);
+
+  s21_decimal src23 = {.bits = {23, 1, 0, 2147483648}};
+  s21_decimal src24 = {.bits = {23, 1, 4, 2147549184}};
+  ck_assert_int_eq(s21_is_greater(src23, src24), 1);
+
+  s21_decimal src25 = {.bits = {225, 1, 0, 2147483648}};
+  s21_decimal src26 = {.bits = {225, 1, 3, 2147483648}};
+  ck_assert_int_eq(s21_is_greater(src25, src26), 1);
+
+  s21_decimal src27 = {.bits = {2, 0, 0, 0}};
+  s21_decimal src28 = {.bits = {2, 1, 0, 0}};
+  ck_assert_int_eq(s21_is_greater(src27, src28), 0);
+
+  s21_decimal src29 = {.bits = {2, 1, 5, 0}};
+  s21_decimal src30 = {.bits = {2, 1, 7, 0}};
+  ck_assert_int_eq(s21_is_greater(src29, src30), 0);
+
+  s21_decimal src31 = {.bits = {1230, 0, 0, 131072}};  // 1230 / 10^2
+  s21_decimal src32 = {.bits = {123, 0, 0, 65536}};    // 123 / 10^1
+  ck_assert_int_eq(s21_is_greater(src31, src32), 0);
+
+  s21_decimal src33 = {.bits = {123, 0, 0, 131072}};
+  s21_decimal src34 = {.bits = {123, 1, 0, 65536}};
+  ck_assert_int_eq(s21_is_greater(src33, src34), 0);
+
+  s21_decimal src35 = {.bits = {123, 0, 0, 131072}};
+  s21_decimal src36 = {.bits = {1231, 0, 0, 65536}};
+  ck_assert_int_eq(s21_is_greater(src35, src36), 0);
+
+#test is_greater_or_equal
+  s21_decimal src1 = {.bits = {3, 0, 0, 0}};
+  s21_decimal src2 = {.bits = {2, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_greater_or_equal(src1, src2), 1);
+
+#test is_less
+  s21_decimal src1 = {.bits = {3, 0, 0, 0}};
+  s21_decimal src2 = {.bits = {2, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less(src1, src2), 0);
+
+  s21_decimal src3 = {.bits = {8, 0, 0, 0}};
+  s21_decimal src4 = {.bits = {8, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less(src3, src4), 0);
+
+  s21_decimal src5 = {.bits = {1, 0, 0, 0}};           // 1
+  s21_decimal src6 = {.bits = {1, 0, 0, 2147483648}};  // -1
+  ck_assert_int_eq(s21_is_less(src5, src6), 0);
+
+  s21_decimal src7 = {.bits = {1, 0, 0, 2147483648}};  // -1
+  s21_decimal src8 = {.bits = {1, 0, 0, 0}};           // 1
+  ck_assert_int_eq(s21_is_less(src7, src8), 1);
+
+  s21_decimal src9 = {.bits = {17, 0, 0, 2147483648}};   // -17
+  s21_decimal src10 = {.bits = {17, 0, 0, 2147483648}};  // -17
+  ck_assert_int_eq(s21_is_less(src9, src10), 0);
+
+  s21_decimal src11 = {.bits = {16, 0, 0, 2147483648}};  // -16
+  s21_decimal src12 = {.bits = {17, 0, 0, 2147483648}};  // -17
+  ck_assert_int_eq(s21_is_less(src11, src12), 0);
+
+  s21_decimal src13 = {.bits = {225, 1, 0, 2147483648}};
+  s21_decimal src14 = {.bits = {225, 0, 0, 2147483648}};
+  ck_assert_int_eq(s21_is_less(src13, src14), 1);
+
+  s21_decimal src15 = {.bits = {225, 1, 2, 2147483648}};
+  s21_decimal src16 = {.bits = {225, 1, 0, 2147483648}};
+  ck_assert_int_eq(s21_is_less(src15, src16), 1);
+
+  s21_decimal src17 = {.bits = {23, 0, 0, 2147483648}};
+  s21_decimal src18 = {.bits = {23, 0, 0, 2147549184}};
+  ck_assert_int_eq(s21_is_less(src17, src18), 1);
+
+  s21_decimal src19 = {.bits = {23, 1, 0, 2147483648}};
+  s21_decimal src20 = {.bits = {23, 0, 0, 2147549184}};
+  ck_assert_int_eq(s21_is_less(src19, src20), 1);
+
+  s21_decimal src21 = {.bits = {23, 1, 4, 2147483648}};
+  s21_decimal src22 = {.bits = {23, 1, 0, 2147549184}};
+  ck_assert_int_eq(s21_is_less(src21, src22), 1);
+
+  s21_decimal src23 = {.bits = {23, 1, 0, 2147483648}};
+  s21_decimal src24 = {.bits = {23, 1, 4, 2147549184}};
+  ck_assert_int_eq(s21_is_less(src23, src24), 0);
+
+  s21_decimal src25 = {.bits = {225, 1, 0, 2147483648}};
+  s21_decimal src26 = {.bits = {225, 1, 3, 2147483648}};
+  ck_assert_int_eq(s21_is_less(src25, src26), 0);
+
+  s21_decimal src27 = {.bits = {2, 0, 0, 0}};
+  s21_decimal src28 = {.bits = {2, 1, 0, 0}};
+  ck_assert_int_eq(s21_is_less(src27, src28), 1);
+
+  s21_decimal src29 = {.bits = {2, 1, 5, 0}};
+  s21_decimal src30 = {.bits = {2, 1, 7, 0}};
+  ck_assert_int_eq(s21_is_less(src29, src30), 1);
+
+  s21_decimal src31 = {.bits = {1230, 0, 0, 131072}};  // 1230 / 10^2
+  s21_decimal src32 = {.bits = {123, 0, 0, 65536}};    // 123 / 10^1
+  ck_assert_int_eq(s21_is_less(src31, src32), 0);
+
+  s21_decimal src33 = {.bits = {123, 0, 0, 131072}};
+  s21_decimal src34 = {.bits = {123, 1, 0, 65536}};
+  ck_assert_int_eq(s21_is_less(src33, src34), 1);
+
+  s21_decimal src35 = {.bits = {123, 0, 0, 131072}};
+  s21_decimal src36 = {.bits = {1231, 0, 0, 65536}};
+  ck_assert_int_eq(s21_is_less(src35, src36), 1);
+
+#test is_less_or_equal
+  s21_decimal src1 = {.bits = {123, 0, 0, 131072}};
+  s21_decimal src2 = {.bits = {123, 1, 0, 65536}};
+  ck_assert_int_eq(s21_is_less_or_equal(src1, src2), 1);
+
+  s21_decimal src3 = {.bits = {8, 0, 0, 0}};
+  s21_decimal src4 = {.bits = {8, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(src3, src4), 1);
+
+#test from_int_to_decimal
+  int i = 0;
+  s21_decimal a;
+  ck_assert_int_eq(s21_from_int_to_decimal(i, &a), 0);
+  ck_assert_int_eq(a.bits[0] + a.bits[1] + a.bits[2] + a.bits[3], 0);
+  for (int j = -2147483647; j < 0; j /= 16) {
+    s21_decimal b;
+    ck_assert_int_eq(s21_from_int_to_decimal(j, &b), 0);
+    ck_assert_int_eq(b.bits[0] + b.bits[1] + b.bits[2], -j);
+    ck_assert_int_eq(b.bits[3], 0b10000000000000000000000000000000);
+  }
+  for (double j = 1; j <= 2147483647; j *= 16) {
+    s21_decimal b;
+    ck_assert_int_eq(s21_from_int_to_decimal(j, &b), 0);
+    ck_assert_int_eq(b.bits[0] + b.bits[1] + b.bits[2] + b.bits[3], j);
+  }
+
+#test from_decimal_to_int
+  s21_decimal a = {.bits = {0b100101101011010000111, 0, 0, 0}};
+  int i = 0;
+  ck_assert_int_eq(s21_from_decimal_to_int(a, &i), 0);
+  ck_assert_int_eq(i, 1234567);
+  s21_decimal b = {.bits = {2147483647, 0, 0, 0}};
+  ck_assert_int_eq(s21_from_decimal_to_int(b, &i), 0);
+  ck_assert_int_eq(i, 2147483647);
+  s21_decimal c = {.bits = {0b10000000000000000000000000000000, 0, 0,
+                            0b10000000000000000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_int(c, &i), 0);
+  ck_assert_int_eq(i, -2147483648);
+  s21_decimal d = {.bits = {0b01111111111111111111111111111111, 15, 0,
+                            0b00000000000001000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_int(d, &i), 0);
+  ck_assert_int_eq(i, 6657199);
+  s21_decimal e = {.bits = {0b11111111111111111111111111111111,
+                            0b11111111111111111111111111111111,
+                            0b11111111111111111111111111111111,
+                            0b00000000000111000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_int(e, &i), 0);
+  ck_assert_int_eq(i, 7);
+  s21_decimal f = {.bits = {123, 456, 789, 0b00100000000111000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_int(f, &i), 1);
+  s21_decimal g = {.bits = {0b10000000000000000000000000000000, 0, 0,
+                            0b10000000000000000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_int(g, &i), 0);
+  ck_assert_int_eq(i, -2147483648);
+
+#test from_float_to_decimal
+  s21_decimal dst;
+  float src0 = 6.75;
+  ck_assert_int_eq(s21_from_float_to_decimal(src0, &dst), 0);
+  ck_assert_int_eq(dst.bits[3], 0b000000000000000100000000000000000);
+  ck_assert_int_eq(dst.bits[2] + dst.bits[1], 0);
+  ck_assert_int_eq(dst.bits[0], 675);
+
+  float src1 = -1.23456789;
+  ck_assert_int_eq(s21_from_float_to_decimal(src1, &dst), 0);
+  ck_assert_int_eq(dst.bits[3], 0b10000000000001100000000000000000);
+  ck_assert_int_eq(dst.bits[2] + dst.bits[1], 0);
+  ck_assert_int_eq(dst.bits[0], 1234568);
+
+  float src2 = 1234567.89;
+  ck_assert_int_eq(s21_from_float_to_decimal(src2, &dst), 0);
+  ck_assert_int_eq(dst.bits[3], 0b00000000000000000000000000000000);
+  ck_assert_int_eq(dst.bits[2] + dst.bits[1] + dst.bits[0], 1234568);
+
+  float src3 = 123456789;
+  ck_assert_int_eq(s21_from_float_to_decimal(src3, &dst), 0);
+  ck_assert_int_eq(dst.bits[3] + dst.bits[2] + dst.bits[1] + dst.bits[0],
+                  1234568);
+
+  float src4 = 1e-29;
+  ck_assert_int_eq(s21_from_float_to_decimal(src4, &dst), 1);
+  ck_assert_int_eq(dst.bits[3] + dst.bits[2] + dst.bits[1] + dst.bits[0], 0);
+
+  float src5 = -1e-29;
+  ck_assert_int_eq(s21_from_float_to_decimal(src5, &dst), 1);
+  ck_assert_int_eq(dst.bits[3] + dst.bits[2] + dst.bits[1] + dst.bits[0], 0);
+
+  float src6 = -0.0004208;
+  ck_assert_int_eq(s21_from_float_to_decimal(src6, &dst), 0);
+  ck_assert_int_eq(dst.bits[3], 0b10000000000001110000000000000000);
+  ck_assert_int_eq(dst.bits[2] + dst.bits[1] + dst.bits[0], 4208);
+
+  ck_assert_int_eq(s21_from_float_to_decimal(INFINITY, &dst), 1);
+  ck_assert_int_eq(s21_from_float_to_decimal(-INFINITY, &dst), 1);
+
+  ck_assert_int_eq(s21_from_float_to_decimal(src1, NULL), 1);
+
+  float src7 = -129300;
+  ck_assert_int_eq(s21_from_float_to_decimal(src7, &dst), 0);
+  ck_assert_int_eq(dst.bits[0] + dst.bits[1] + dst.bits[2], 129300);
+  ck_assert_int_eq(dst.bits[3], 0b10000000000000000000000000000000);
+
+  float src8 = 0.5632482;
+  ck_assert_int_eq(s21_from_float_to_decimal(src8, &dst), 0);
+  ck_assert_int_eq(dst.bits[0] + dst.bits[1] + dst.bits[2], 5632482);
+  ck_assert_int_eq(dst.bits[3], 0b00000000000001110000000000000000);
+
+  float src9 = -4.294967295e+9;
+  ck_assert_int_eq(s21_from_float_to_decimal(src9, &dst), 0);
+  ck_assert_int_eq(dst.bits[0] + dst.bits[1] + dst.bits[2], 4294967);
+  ck_assert_int_eq(dst.bits[3], 0b10000000000000000000000000000000);
+
+  float src10 = -8932.617;
+  ck_assert_int_eq(s21_from_float_to_decimal(src10, &dst), 0);
+  ck_assert_int_eq(dst.bits[0] + dst.bits[1] + dst.bits[2], 8932617);
+  ck_assert_int_eq(dst.bits[3], 0b10000000000000110000000000000000);
+
+  float src11 = 1.3331;
+  ck_assert_int_eq(s21_from_float_to_decimal(src11, &dst), 0);
+  ck_assert_int_eq(dst.bits[0] + dst.bits[1] + dst.bits[2], 13331);
+  ck_assert_int_eq(dst.bits[3], 0b00000000000001000000000000000000);
+
+#test from_decimal_to_float
+  float f;
+  s21_decimal a = {.bits = {0b00000000000110000000000001111100, 0, 0, 0}};
+  ck_assert_int_eq(s21_from_decimal_to_float(a, &f), 0);
+  ck_assert_float_eq(f, 1572988);
+
+  s21_decimal b = {.bits = {0b11111111111111111111111111111111, 0, 0,
+                            0b10000000000001010000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_float(b, &f), 0);
+  ck_assert_float_eq_tol(f, -42949.67295, 0.01);
+
+  s21_decimal c = {.bits = {0, 0b00000000000000000000000011111111, 0,
+                            0b00000000000011000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_float(c, &f), 0);
+  ck_assert_float_eq_tol(f, 1.095216660480, 0.01);
+
+  s21_decimal d = {.bits = {123, 0, 0, 0b10000000000001000000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_float(d, &f), 0);
+  ck_assert_float_eq_tol(f, -0.0123, 0.01);
+
+  s21_decimal e = {.bits = {2734828, 0, 0, 0b10000000000000100000000000000000}};
+  ck_assert_int_eq(s21_from_decimal_to_float(e, &f), 0);
+  ck_assert_float_eq_tol(f, -27348.28, 0.01);
+
+  s21_decimal g = {{8298343, 0, 0, 65536}};
+  ck_assert_int_eq(s21_from_decimal_to_float(g, &f), 0);
+  ck_assert_float_eq(f, 829834.3);
+
+  s21_decimal h = {{8934278, 0, 0, 196608}};
+  ck_assert_int_eq(s21_from_decimal_to_float(h, &f), 0);
+  ck_assert_float_eq(f, 8934.278);
+
+  s21_decimal i = {{2342382, 0, 0, -2147352576}};
+  ck_assert_int_eq(s21_from_decimal_to_float(i, &f), 0);
+  ck_assert_float_eq(f, -23423.82);
+
+  s21_decimal j = {{2734828, 0, 0, -2147352576}};
+  ck_assert_int_eq(s21_from_decimal_to_float(j, &f), 0);
+  ck_assert_float_eq(f, -27348.28);
+
+  s21_decimal k = {{823923, 0, 0, 0}};
+  ck_assert_int_eq(s21_from_decimal_to_float(k, &f), 0);
+  ck_assert_float_eq(f, 823923);
+
+  s21_decimal l = {{129312300, 0, 0, -2147483648}};
+  ck_assert_int_eq(s21_from_decimal_to_float(l, &f), 0);
+  ck_assert_float_eq(f, -129312300);
+
+  s21_decimal m = {{2374478, 0, 0, 131072}};
+  ck_assert_int_eq(s21_from_decimal_to_float(m, &f), 0);
+  ck_assert_float_eq(f, 23744.78);
+
+  s21_decimal n = {{2393823, 0, 0, -2147287040}};
+  ck_assert_int_eq(s21_from_decimal_to_float(n, &f), 0);
+  ck_assert_float_eq(f, -2393.823);
+
+  s21_decimal o = {{9124792, 0, 0, 65536}};
+  ck_assert_int_eq(s21_from_decimal_to_float(o, &f), 0);
+  ck_assert_float_eq(f, 912479.2);
+
+  s21_decimal p = {{1232347, 0, 0, -2147418112}};
+  ck_assert_int_eq(s21_from_decimal_to_float(p, &f), 0);
+  ck_assert_float_eq(f, -123234.7);
+
+  s21_decimal q = {{101217, 0, 0, 65536}};
+  ck_assert_int_eq(s21_from_decimal_to_float(q, &f), 0);
+  ck_assert_float_eq(f, 10121.7);
+
+  s21_decimal r = {{23748280, 0, 0, -2147483648}};
+  ck_assert_int_eq(s21_from_decimal_to_float(r, &f), 0);
+  ck_assert_float_eq(f, -23748280);
+
+  s21_decimal s = {{802000, 0, 0, 0}};
+  ck_assert_int_eq(s21_from_decimal_to_float(s, &f), 0);
+  ck_assert_float_eq(f, 802000);
+
+  s21_decimal t = {{13331, 0, 0, 262144}};
+  ck_assert_int_eq(s21_from_decimal_to_float(t, &f), 0);
+  ck_assert_float_eq(f, 1.3331);
+
+  s21_decimal u = {{1667283, 0, 0, -2147090432}};
+  ck_assert_int_eq(s21_from_decimal_to_float(u, &f), 0);
+  ck_assert_float_eq(f, -1.667283);
+
+  s21_decimal v = {{5632482, 0, 0, 458752}};
+  ck_assert_int_eq(s21_from_decimal_to_float(v, &f), 0);
+  ck_assert_float_eq(f, 0.5632482);
+
+  s21_decimal w = {{6527385, 0, 0, -2147024896}};
+  ck_assert_int_eq(s21_from_decimal_to_float(w, &f), 0);
+  ck_assert_float_eq(f, -0.6527385);
+
+  s21_decimal x = {{-296, 0, 0, -2147483648}};
+  ck_assert_int_eq(s21_from_decimal_to_float(x, &f), 0);
+  ck_assert_float_eq(f, -4294967000);
+
+  s21_decimal y = {{-296, 0, 0, 0}};
+  ck_assert_int_eq(s21_from_decimal_to_float(y, &f), 0);
+  ck_assert_float_eq(f, 4294967000);
+
+  s21_decimal z = {{8932617, 0, 0, -2147287040}};
+  ck_assert_int_eq(s21_from_decimal_to_float(z, &f), 0);
+  ck_assert_float_eq(f, -8932.617);
+
+  s21_setBinaryValue(&i, 0, 29, 1, 0, 0);
+  ck_assert_int_eq(s21_from_decimal_to_float(i, &f), 1);
+  ck_assert_float_eq(f, 0);
+
+#test truncate
+  s21_decimal a = {.bits = {100, 0, 0, 0}};
+  s21_decimal res = {.bits = {0, 0, 0, 0}};
+  ck_assert_int_eq(s21_truncate(a, &res), 0);
+  ck_assert_int_eq(res.bits[0] + res.bits[1] + res.bits[2] + res.bits[3], 100);
+
+  s21_decimal c = {.bits = {1234, 5678, 0, 327680}};  // 243868243.07922
+  ck_assert_int_eq(s21_truncate(c, &res), 0);
+  ck_assert_int_eq(res.bits[0] + res.bits[1] + res.bits[2] + res.bits[3],
+                  243868243);
+
+  s21_decimal rez = {.bits = {0, 0, 0, 0}};
+  s21_decimal d = {.bits = {0, 0, 0, 2147483647}};
+  ck_assert_int_eq(s21_truncate(d, &rez), 1);
+  ck_assert_int_eq(rez.bits[0] + rez.bits[1] + rez.bits[2] + rez.bits[3],
+                  0);
+                  
+#test sfloor
+  s21_decimal a = {{2116047141, 54697, 0, -2147090432}};  // -234923942.236453
+  s21_decimal res_bits = {{0, 0, 0, 0}};
+
+  int res = s21_floor(a, &res_bits);
+
+  ck_assert_int_eq((int)res, 0);
+  ck_assert_int_eq((int)res_bits.bits[0], 234923943);
+  ck_assert_int_eq((int)res_bits.bits[1], 0);
+  ck_assert_int_eq((int)res_bits.bits[2], 0);
+  ck_assert_int_eq((int)res_bits.bits[3], -2147483648);
+
+  s21_decimal c = {{1832389311, 65997, 0, 720896}};  // 2834.56789023423
+  s21_decimal re_bits = {{0, 0, 0, 0}};
+
+  int re = s21_floor(c, &re_bits);
+
+  ck_assert_int_eq((int)re, 0);
+  ck_assert_int_eq((int)re_bits.bits[0], 2834);
+  ck_assert_int_eq((int)re_bits.bits[1], 0);
+  ck_assert_int_eq((int)re_bits.bits[2], 0);
+  ck_assert_int_eq((int)re_bits.bits[3], 0);
+
+  s21_decimal d = {{1513097376, 132222, 0, -2146893824}};  // -567890.678909088
+  s21_decimal r_bits = {{0, 0, 0, 0}};
+
+  int r = s21_floor(d, &r_bits);
+
+  ck_assert_int_eq((int)r, 0);
+  ck_assert_int_eq((int)r_bits.bits[0], 567891);
+  ck_assert_int_eq((int)r_bits.bits[1], 0);
+  ck_assert_int_eq((int)r_bits.bits[2], 0);
+  ck_assert_int_eq((int)r_bits.bits[3], -2147483648);
+
+  s21_decimal e = {{0, 0, 0, 0}};  // 0
+  s21_decimal es_bits = {{0, 0, 0, 0}};
+
+  int es = s21_floor(e, &es_bits);
+
+  ck_assert_int_eq((int)es, 0);
+  ck_assert_int_eq((int)es_bits.bits[0], 0);
+  ck_assert_int_eq((int)es_bits.bits[1], 0);
+  ck_assert_int_eq((int)es_bits.bits[2], 0);
+  ck_assert_int_eq((int)es_bits.bits[3], 0);
+
+  s21_decimal n = {{885678421, 180172, 0, 589824}};  // 773833.733333333
+  s21_decimal s_bits = {{0, 0, 0, 0}};
+
+  int s = s21_floor(n, &s_bits);
+
+  ck_assert_int_eq((int)s, 0);
+  ck_assert_int_eq((int)s_bits.bits[0], 773833);
+  ck_assert_int_eq((int)s_bits.bits[1], 0);
+  ck_assert_int_eq((int)s_bits.bits[2], 0);
+  ck_assert_int_eq((int)s_bits.bits[3], 0);
+
+#test negate
+  s21_decimal a = {{0, 0, 0, 0}};  // 0
+  s21_decimal tes_bits = {{0, 0, 0, 0}};
+
+  int tes = s21_negate(a, &tes_bits);
+
+  ck_assert_int_eq((int)tes, 0);
+  ck_assert_int_eq((int)tes_bits.bits[0], 0);
+  ck_assert_int_eq((int)tes_bits.bits[1], 0);
+  ck_assert_int_eq((int)tes_bits.bits[2], 0);
+  ck_assert_int_eq((int)tes_bits.bits[3], -2147483648);
+
+  s21_decimal b = {{885678421, 180172, 0, 589824}};  // 773833.733333333
+  s21_decimal re_bits = {{0, 0, 0, 0}};
+
+  int re = s21_negate(b, &re_bits);
+
+  ck_assert_int_eq((int)re, 0);
+  ck_assert_int_eq((int)re_bits.bits[0], 885678421);
+  ck_assert_int_eq((int)re_bits.bits[1], 180172);
+  ck_assert_int_eq((int)re_bits.bits[2], 0);
+  ck_assert_int_eq((int)re_bits.bits[3], -2146893824);
+
+  s21_decimal c = {{1317904309, 19, 0, 393216}};  // 82922.282933
+  s21_decimal r_bits = {{0, 0, 0, 0}};
+
+  int r = s21_negate(c, &r_bits);
+
+  ck_assert_int_eq((int)r, 0);
+  ck_assert_int_eq((int)r_bits.bits[0], 1317904309);
+  ck_assert_int_eq((int)r_bits.bits[1], 19);
+  ck_assert_int_eq((int)r_bits.bits[2], 0);
+  ck_assert_int_eq((int)r_bits.bits[3], -2147090432);
+
+  s21_decimal val = {.bits = {0, 0, 0, 2147483647}};
+  s21_decimal rez = {0};
+  int er = s21_negate(val, &rez);
+  ck_assert_int_eq((int)er, 1);
+  ck_assert_int_eq((int)rez.bits[0], 0);
+  ck_assert_int_eq((int)rez.bits[1], 0);
+  ck_assert_int_eq((int)rez.bits[2], 0);
+  ck_assert_int_eq((int)rez.bits[3], -1);
+
+  s21_decimal n = {0};
+  s21_setBinaryValue(&n, 1, 10, 0, 0, 0);
+  int y = s21_negate(n, &rez);
+  ck_assert_int_eq(y, 0);
+  ck_assert_int_eq(s21_getSign(rez), 0);
+
+  s21_decimal n1 = {0};
+  s21_setBinaryValue(&n1, 0, 10, 0, 0, 0);
+  int y1 = s21_negate(n1, &rez);
+  ck_assert_int_eq(y1, 0);
+  ck_assert_int_eq(s21_getSign(rez), 1);
+
+#test rounds
+  s21_decimal q = {{0, 0, 0, 0}};  // 0
+  s21_decimal q_1 = {{0, 0, 0, 0}};
+
+  int qres = s21_round(q, &q_1);
+
+  ck_assert_int_eq((int)qres, 0);
+  ck_assert_int_eq((int)q_1.bits[0], 0);
+  ck_assert_int_eq((int)q_1.bits[1], 0);
+  ck_assert_int_eq((int)q_1.bits[2], 0);
+  ck_assert_int_eq((int)q_1.bits[3], 0);
+
+  s21_decimal a = {{885678421, 180172, 0, 589824}};  // 773833.733333333
+  s21_decimal res_bits = {{0, 0, 0, 0}};
+
+  int res = s21_round(a, &res_bits);
+
+  ck_assert_int_eq((int)res, 0);
+  ck_assert_int_eq((int)res_bits.bits[0], 773834);
+  ck_assert_int_eq((int)res_bits.bits[1], 0);
+  ck_assert_int_eq((int)res_bits.bits[2], 0);
+  ck_assert_int_eq((int)res_bits.bits[3], 0);
+
+  s21_decimal b = {{1317904309, 19, 0, 393216}};  // 82922.282933
+  s21_decimal re_bits = {{0, 0, 0, 0}};
+
+  int re = s21_round(b, &re_bits);
+
+  ck_assert_int_eq((int)re, 0);
+  ck_assert_int_eq((int)re_bits.bits[0], 82922);
+  ck_assert_int_eq((int)re_bits.bits[1], 0);
+  ck_assert_int_eq((int)re_bits.bits[2], 0);
+  ck_assert_int_eq((int)re_bits.bits[3], 0);
