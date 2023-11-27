@@ -1,5 +1,5 @@
 # SMART_CALC 
-## a calculator that can make graphs and also calculate the loan and deposit, made on gtk+  
+## A calculator that can make graphs and also calculate the loan and deposit, made on gtk+  
 
 The calculator supports parentheses, addition, subtraction, multiplication, division, exponentiation, remainder, unary minus
 
