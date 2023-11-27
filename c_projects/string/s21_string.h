@@ -9,6 +9,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#include "s21_errors.h"
+
 typedef long unsigned s21_size_t;
 typedef unsigned int u_int32_t;
 typedef int wchar_t;

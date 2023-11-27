@@ -1,10 +1,5 @@
 #include "s21_string.h"
 
-#include "s21_errors.h"
-/*
-1 | Выполняет поиск первого вхождения символа c (беззнаковый тип) в первых n
-байтах строки, на которую указывает аргумент str.
-*/
 void *s21_memchr(const void *str, int c, s21_size_t n) {
   const unsigned char *ptr = str;
   void *result = s21_NULL;
@@ -17,9 +12,6 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
   return result;
 }
 
-/*
-2 | Сравнивает первые n байтов str1 и str2.
-*/
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
   const unsigned char *c1 = str1, *c2 = str2, *end = c1 + n;
   int result = 0;
@@ -30,9 +22,6 @@ int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
   return result;
 }
 
-/*
-3 | Копирует n символов из src в dest.
-*/
 void *s21_memcpy(void *dest, const void *src, s21_size_t n) {
   unsigned char *c1 = (unsigned char *)dest;
   const unsigned char *c2 = (const unsigned char *)src;
@@ -43,8 +32,6 @@ void *s21_memcpy(void *dest, const void *src, s21_size_t n) {
   return dest;
 }
 
-/*4  Копирует символ c (беззнаковый тип) в первые n символов строки, на которую
- */
 void *s21_memset(void *str, int c, s21_size_t n) {
   unsigned char *p = str;
   while (n-- > 0) {
@@ -53,7 +40,6 @@ void *s21_memset(void *str, int c, s21_size_t n) {
   return str;
 }
 
-// 5 Добавляет строку src, в конец строки dest, длиной до n символов.
 char *s21_strncat(char *dest, const char *src, s21_size_t n) {
   char *p = dest + s21_strlen(dest);
   while (*src != '\0' && n-- > 0) {
@@ -63,8 +49,6 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
   return dest;
 }
 
-/* 6 Выполняет поиск первого вхождения символа c (беззнаковый тип) в строке, на
-которую указывает аргумент str. */
 char *s21_strchr(const char *str, int c) {
   char *result = s21_NULL;
   int flag = 1;
@@ -81,7 +65,6 @@ char *s21_strchr(const char *str, int c) {
   return result;
 }
 
-// 7  Сравнивает не более первых n байтов str1 и str2.
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
   int result = 0;
   int flag = 0;
@@ -97,7 +80,6 @@ int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
   return result;
 }
 
-// 8 Копирует до n символов из src, в dest
 char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
   if ((int)n > 0) {
     for (s21_size_t i = 0; i < n && i < s21_strlen(src); i++) {
@@ -110,10 +92,6 @@ char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
   return dest;
 }
 
-/*
-9 Вычисляет длину начального сегмента str1, который полностью состоит из
-символов, не входящих в str2.
-*/
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
   s21_size_t length = 0;
   int mfr = 0;
@@ -126,9 +104,6 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
   return length;
 }
 
-/*
-10 Возвращает указатель на строку с сообщением об ошибке с номером errnum
-*/
 char *s21_strerror(int errnum) {
   char *err_array[] = s21_errors;
   char *error = s21_NULL;
@@ -142,7 +117,6 @@ char *s21_strerror(int errnum) {
   return error;
 }
 
-// 11 Возвращает длину строки
 s21_size_t s21_strlen(const char *str) {
   s21_size_t length = 0;
   if (str) {
@@ -153,10 +127,6 @@ s21_size_t s21_strlen(const char *str) {
   return length;
 }
 
-/*
-12 возвращает нуль или часть строки, отсекаемой ближайшим совпадением
- любого элемента второй строки
-*/
 char *s21_strpbrk(const char *str1, const char *str2) {
   char *find = s21_NULL;
   s21_size_t cr = 0;
@@ -171,10 +141,6 @@ char *s21_strpbrk(const char *str1, const char *str2) {
   return find;
 }
 
-/*
-13 возвращает нуль или часть строки, отсекаемой совпадением символа
- с конца строки
-*/
 char *s21_strrchr(const char *str, int c) {
   s21_size_t len = s21_strlen(str);
   s21_size_t i = (len) ? len : 0, flag_find = 0, flag_end = 0;
@@ -193,9 +159,6 @@ char *s21_strrchr(const char *str, int c) {
   return (char *)find;
 }
 
-/*
-14 возвращает нуль или часть строки, отсекаемой совпадением строки needle
-*/
 char *s21_strstr(const char *haystack, const char *needle) {
   s21_size_t len = s21_strlen(needle), pos_hays = 0, pos_need = 0;
   int flag_find = 0;
@@ -211,11 +174,6 @@ char *s21_strstr(const char *haystack, const char *needle) {
   return (char *)find;
 }
 
-/*
-15 возвращает нуль или часть строки, отсекаемой совпадением с символом
-(разделителем) второй строки, меняя этот символ в исходной строке
-на нуль-терминатор
-*/
 char *s21_strtok(char *str, const char *delim) {
   static char *rest_str = s21_NULL;
   char *ptr = s21_NULL;
@@ -239,7 +197,6 @@ char *s21_strtok(char *str, const char *delim) {
   return ptr;
 }
 
-// 1 Возвращает копию строки str, преобразованную в верхний регистр
 void *s21_to_upper(const char *str) {
   char *result = s21_NULL;
   int length = s21_strlen(str);
@@ -258,7 +215,6 @@ void *s21_to_upper(const char *str) {
   return result;
 }
 
-// 2 Возвращает копию строки str, преобразованную в нижний регистр
 void *s21_to_lower(const char *str) {
   char *result = s21_NULL;
   int length = s21_strlen(str);
@@ -277,10 +233,6 @@ void *s21_to_lower(const char *str) {
   return result;
 }
 
-/*
-3. Возвращает новую строку, в которой указанная строка (str) вставлена в
-указанную позицию (start_index) в данной строке (src)
-*/
 void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
   char *result = s21_NULL;
   s21_size_t length = 0;
@@ -297,12 +249,6 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
   }
   return result;
 }
-
-/*
-  Специальные функции обработки строк (вдохновленные классом String в языке C#)
-  4 Возвращает s21_NULL или указатель на новую строку, в которой сначала и с
-  конца убираются символы, входящие в строку trim_chars
-*/
 
 void *s21_trim(const char *src, const char *trim_chars) {
   const char *psrc = src;
