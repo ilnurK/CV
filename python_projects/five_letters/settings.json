@@ -1,0 +1,14 @@
+{
+  "files.associations": {
+    "typeinfo": "c",
+    "array": "c",
+    "string": "c",
+    "string_view": "c",
+    "algorithm": "c",
+    "system_error": "c"
+  },
+    "[python]": {
+    "editor.defaultFormatter": "giyyapan.pyformat"  
+  }
+  
+}
