@@ -1,4 +1,4 @@
-# GUI utility for selecting words in the game 5 letters
+# GUI utility for searching words in the game 5 letters
 You can select letters that:  
 -  are in the word and are in their position
 -  are in the word and are not in their position
