@@ -59,8 +59,8 @@
                 <property name="margin-end">7</property>
                 <property name="column-spacing">7</property>
                 <child>
-                  <object class="GtkEntry" id="e_letter1">
-                    <property name="name">e_letter1</property>
+                  <object class="GtkEntry" id="entry_fit0">
+                    <property name="name">entry_fit0</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -84,8 +84,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter2">
-                    <property name="name">e_letter2</property>
+                  <object class="GtkEntry" id="entry_fit1">
+                    <property name="name">entry_fit1</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -98,8 +98,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter3">
-                    <property name="name">e_letter3</property>
+                  <object class="GtkEntry" id="entry_fit2">
+                    <property name="name">entry_fit2</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -112,8 +112,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter5">
-                    <property name="name">e_letter5</property>
+                  <object class="GtkEntry" id="entry_fit4">
+                    <property name="name">entry_fit4</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -125,8 +125,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter4">
-                    <property name="name">e_letter4</property>
+                  <object class="GtkEntry" id="entry_fit3">
+                    <property name="name">entry_fit3</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -228,8 +228,8 @@
                 <property name="margin-end">7</property>
                 <property name="column-spacing">7</property>
                 <child>
-                  <object class="GtkEntry" id="e_letter_pos1">
-                    <property name="name">e_letter_pos1</property>
+                  <object class="GtkEntry" id="entry_out0">
+                    <property name="name">entry_out0</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -252,8 +252,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter_pos2">
-                    <property name="name">e_letter_pos2</property>
+                  <object class="GtkEntry" id="entry_out1">
+                    <property name="name">entry_out1</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -265,8 +265,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter_pos3">
-                    <property name="name">e_letter_pos3</property>
+                  <object class="GtkEntry" id="entry_out2">
+                    <property name="name">entry_out2</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -278,8 +278,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter_pos5">
-                    <property name="name">e_letter_pos5</property>
+                  <object class="GtkEntry" id="entry_out4">
+                    <property name="name">entry_out4</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -291,8 +291,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="e_letter_pos4">
-                    <property name="name">e_letter_pos4</property>
+                  <object class="GtkEntry" id="entry_out3">
+                    <property name="name">entry_out3</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="max-length">1</property>
@@ -381,8 +381,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="e_no_fit">
-                <property name="name">e_no_fit</property>
+              <object class="GtkEntry" id="entry_not">
+                <property name="name">entry_not</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="valign">center</property>
