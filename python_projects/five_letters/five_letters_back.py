@@ -10,26 +10,37 @@ N = 5
 
 
 def check_fit_letters(word, true_fit, flag_fit):
-    for i in range(N):
-        c = true_fit[i].upper()
+    i = 0
+    while i < N and flag_fit:
+        c = true_fit[i]
         if c != BLANK and c != word[i]:
             flag_fit = 0
+        i += 1
     return flag_fit
 
 
 def check_pos_letters(word, out_of_pos_fit, flag_fit):
-    for i in range(N):
-        c = out_of_pos_fit[i].upper()
+    i = 0
+    while i < N and flag_fit:
+        c = out_of_pos_fit[i]
         if c != BLANK and c not in word or word.find(c) == i:
             flag_fit = 0
+        i += 1
     return flag_fit
 
 
-def check_no_letters(word, not_fit, flag_fit):
-    for i in range(len(not_fit[0])):
-        c = not_fit[0][i].upper()
+def check_no_letters(word, not_fit, true_fit, out_of_pos_fit, flag_fit):
+    i = 0
+    len_not_fit = len(not_fit[0])
+    while i < len_not_fit and flag_fit:
+        c = not_fit[0][i]
         if c in word:
-            flag_fit = 0
+            if c not in true_fit and c not in out_of_pos_fit:
+                flag_fit = 0
+            else:
+                if word.count(c) > 1:                    
+                    flag_fit = 0
+        i += 1
     return flag_fit
 
 
@@ -40,7 +51,7 @@ def check_word(word, true_fit, out_of_pos_fit, not_fit, fit_words):
     if flag_fit:
         flag_fit = check_pos_letters(word, out_of_pos_fit, flag_fit)
     if flag_fit:
-        flag_fit = check_no_letters(word, not_fit, flag_fit)
+        flag_fit = check_no_letters(word, not_fit, true_fit, out_of_pos_fit, flag_fit)
     if flag_fit:
         fit_words.append(word)
         flag_find = 1
@@ -74,16 +85,16 @@ def get_data(builder):
         entries.append(builder.get_object(ENTRY_FIT + str(i)))
     for e in entries:
         text = e.get_text()
-        text = text if (len(text)) else BLANK
+        text = text.upper() if (len(text)) else BLANK
         data[ENTRY_FIT].append(text)
     entries.clear()
     for i in range(N):
         entries.append(builder.get_object(ENTRY_OUT + str(i)))
     for e in entries:
         text = e.get_text()
-        text = text if (len(text)) else BLANK
+        text = text.upper() if (len(text)) else BLANK
         data[ENTRY_OUT].append(text)
-    data[ENTRY_NOT].append(builder.get_object(ENTRY_NOT).get_text())
+    data[ENTRY_NOT].append(builder.get_object(ENTRY_NOT).get_text().upper())
     return data
 
 
