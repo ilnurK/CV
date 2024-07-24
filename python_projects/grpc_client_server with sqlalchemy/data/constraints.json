@@ -1,0 +1,38 @@
+{
+  "Corvette": {
+    "length": "80-250",
+    "crew_size": "4-10",
+    "can_armed": "Yes",
+    "can_hostile": "Yes"
+  },
+  "Frigate": {
+    "length": "300-600",
+    "crew_size": "10-15",
+    "can_armed": "Yes",
+    "can_hostile": "No"
+  },
+  "Cruiser": {
+    "length": "500-1000",
+    "crew_size": "15-30",
+    "can_armed": "Yes",
+    "can_hostile": "Yes"
+  },
+  "Destroyer": {
+    "length": "800-2000",
+    "crew_size": "50-80",
+    "can_armed": "Yes",
+    "can_hostile": "No"
+  },
+  "Carrier": {
+    "length": "1000-4000",
+    "crew_size": "120-250",
+    "can_armed": "No",
+    "can_hostile": "Yes"
+  },
+  "Dreadnought": {
+    "length": "5000-20000",
+    "crew_size": "300-500",
+    "can_armed": "Yes",
+    "can_hostile": "Yes"
+  }
+}

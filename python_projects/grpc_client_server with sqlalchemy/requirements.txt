@@ -1,0 +1,8 @@
+grpcio==1.64.1
+grpcio==1.30.2
+protobuf==3.12.4
+psycopg2==2.9.2
+pydantic==2.8.2
+SQLAlchemy==2.0.25
+alembic==1.13.1
+sphinx==7.4.4

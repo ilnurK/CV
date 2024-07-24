@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>arguments_parsing module &#8212; Battleship messages doc</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=29a6c3e3"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/img.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="battleship_pydantic module" href="battleship_pydantic.html" />
+    <link rel="prev" title="reporting_client module" href="reporting_client.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-arguments_parsing">
+<span id="arguments-parsing-module"></span><h1>arguments_parsing module<a class="headerlink" href="#module-arguments_parsing" title="Link to this heading">¶</a></h1>
+<p>Argument parsing module for client to receive battleship messages</p>
+<p>The script requires argparse module to check inputted coordinates
+and arguments, dataclasses for creating a typechecked class</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="arguments_parsing.Args">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">arguments_parsing.</span></span><span class="sig-name descname"><span class="pre">Args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra_hour</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_traitors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tables_clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#arguments_parsing.Args" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for storing parsed values</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ra_hour: int</dt><dd><p>Right ascension’s hours</p>
+</dd>
+<dt>ra_min: int</dt><dd><p>Right ascension’s minutes</p>
+</dd>
+<dt>ra_sec: float</dt><dd><p>Right ascension’s seconds</p>
+</dd>
+<dt>dec_deg: int</dt><dd><p>Declension’s degrees</p>
+</dd>
+<dt>dec_min: int</dt><dd><p>Declension’s minutes</p>
+</dd>
+<dt>dec_sec: float</dt><dd><p>Declension’s seconds</p>
+</dd>
+<dt>scan: bool</dt><dd><p>Is scan mode</p>
+</dd>
+<dt>list_traitors: bool</dt><dd><p>Is traitors print mode</p>
+</dd>
+<dt>list_clear: bool</dt><dd><p>Is traitors clean mode</p>
+</dd>
+<dt>tables_clear: bool</dt><dd><p>Is delete tables mode</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.dec_deg">
+<span class="sig-name descname"><span class="pre">dec_deg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#arguments_parsing.Args.dec_deg" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.dec_min">
+<span class="sig-name descname"><span class="pre">dec_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#arguments_parsing.Args.dec_min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.dec_sec">
+<span class="sig-name descname"><span class="pre">dec_sec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#arguments_parsing.Args.dec_sec" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.list_clear">
+<span class="sig-name descname"><span class="pre">list_clear</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#arguments_parsing.Args.list_clear" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.list_traitors">
+<span class="sig-name descname"><span class="pre">list_traitors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#arguments_parsing.Args.list_traitors" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.ra_hour">
+<span class="sig-name descname"><span class="pre">ra_hour</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#arguments_parsing.Args.ra_hour" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.ra_min">
+<span class="sig-name descname"><span class="pre">ra_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#arguments_parsing.Args.ra_min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.ra_sec">
+<span class="sig-name descname"><span class="pre">ra_sec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#arguments_parsing.Args.ra_sec" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.scan">
+<span class="sig-name descname"><span class="pre">scan</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#arguments_parsing.Args.scan" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="arguments_parsing.Args.tables_clear">
+<span class="sig-name descname"><span class="pre">tables_clear</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#arguments_parsing.Args.tables_clear" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="arguments_parsing.args_parse">
+<span class="sig-prename descclassname"><span class="pre">arguments_parsing.</span></span><span class="sig-name descname"><span class="pre">args_parse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#arguments_parsing.Args" title="arguments_parsing.Args"><span class="pre">Args</span></a></span></span><a class="headerlink" href="#arguments_parsing.args_parse" title="Link to this definition">¶</a></dt>
+<dd><p>CLI arguments parsing</p>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If args are incompatible</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="arguments_parsing.coords_init">
+<span class="sig-prename descclassname"><span class="pre">arguments_parsing.</span></span><span class="sig-name descname"><span class="pre">coords_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#arguments_parsing.Args" title="arguments_parsing.Args"><span class="pre">Args</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#arguments_parsing.coords_init" title="Link to this definition">¶</a></dt>
+<dd><p>Check input coordinates</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>inp: List[str]</dt><dd><p>List of entered values</p>
+</dd>
+<dt>args: Args</dt><dd><p>The entered values class</p>
+</dd>
+</dl>
+</section>
+<section id="id1">
+<h2>Raises<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>if coordinates doesn’t fit required type</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/img.png" alt="Logo of Battleship messages"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Battleship messages</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="reporting_server.html">reporting_server module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reporting_client.html">reporting_client module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reporting_client.html#reporting_client.get_constraints"><code class="docutils literal notranslate"><span class="pre">get_constraints()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting_client.html#reporting_client.get_ship_dict"><code class="docutils literal notranslate"><span class="pre">get_ship_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting_client.html#reporting_client.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting_client.html#reporting_client.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting_client.html#reporting_client.ship_print"><code class="docutils literal notranslate"><span class="pre">ship_print()</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">arguments_parsing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="battleship_pydantic.html">battleship_pydantic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_tables.html">data_tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tables_crud.html">tables_crud module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_functions.html">common_functions module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="reporting_client.html">reporting_client module</a><ul>
+      <li>Previous: <a href="reporting_client.html" title="previous chapter">reporting_client module</a></li>
+      <li>Next: <a href="battleship_pydantic.html" title="next chapter">battleship_pydantic module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, suzannpi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/arguments_parsing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

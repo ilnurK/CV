@@ -1,0 +1,12 @@
+General
+Lieutenant General
+Colonel
+Major
+Captain
+First Lieutenant
+Chief Warrant Office
+Sergeant Major of the Army
+Sergeant
+Corporal
+Specialist
+Private
