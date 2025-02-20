@@ -1,0 +1,185 @@
+html {
+    min-height: 100vh;
+    height: 100%;
+    background-color: #294534;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#brick-games {
+    display: flex;
+    gap: 10px;
+    background-color: rgba(158, 172, 136, 1);
+    width: calc((var(--side-tile-size) + var(--side-board-gap) ) * var(--side-board-width)  
+                - var(--side-board-gap) +
+                (var(--side-tile-size) + var(--side-board-gap) ) * var(--side-board-width)  
+                - var(--side-board-gap) + 100px);
+}
+
+#command-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#control-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    width: 400px; 
+
+}
+
+#direction-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+}
+
+.action-button, .start-button, .reset-button {
+    background-color: #ECDE5F;
+    border-radius: 50%;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+}
+
+#up {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+#down {
+    grid-row: 3;
+    grid-column: 2;
+}
+
+#left {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+#right {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+#action {
+    gap: 10px;
+    min-width: 100px;
+    min-height: 100px;
+    max-height: 100px;
+    max-width: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-button:hover, .start-button:hover, .reset-button:hover {
+    background-color: #ecde5fef;
+}
+
+#side-board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: var(--side-board-gap);
+    padding: var(--side-board-gap);
+    width: calc(
+        (var(--side-tile-size) + var(--side-board-gap) ) * var(--side-board-width)  
+        - var(--side-board-gap)
+    );
+}
+
+
+#game-board {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--game-board-gap);
+    background: var(--game-board-background);
+    padding: var(--game-board-gap);
+    width: calc(
+        (var(--tile-size) + var(--game-board-gap)) * var(--game-board-width) -
+            var(--game-board-gap)
+    );
+}
+
+.tile {
+    width: var(--tile-size);
+    height: var(--tile-size);
+    background: var(--tile-color);
+}
+
+.side-tile {
+    justify-content: center;
+    width: var(--side-tile-size);
+    height: var(--side-tile-size);
+    background: var(--tile-color);
+    outline: 1px solid rgba(0, 0, 0, 0);
+}
+
+.tile, .side-tile {
+    &.active {
+        background: var(--tile-active-color);
+    }
+    
+    &.main_diagonal_up {
+        background: linear-gradient(45deg, var(--tile-color) 50%, var(--tile-active-color) 50%);
+    }
+    
+    &.main_diagonal_down {
+        background: linear-gradient(45deg, var(--tile-active-color) 50%, var(--tile-color) 50%);
+    }
+    
+    &.sec_diagonal_up {
+        background: linear-gradient(135deg, var(--tile-active-color) 50%, var(--tile-color) 50%);
+    }
+    
+    &.sec_diagonal_down {
+        background: linear-gradient(135deg, var(--tile-color) 50%, var(--tile-active-color) 50%);
+    }
+    
+    &.horizontal_down50 {
+        background: linear-gradient(0deg, var(--tile-active-color) 50%, var(--tile-color) 50%);
+    }
+    
+    &.horizontal_down25 {
+        background: linear-gradient(0deg, var(--tile-active-color) 25%, var(--tile-color) 25%);
+    }
+    
+    &.horizontal_up75 {
+        background: linear-gradient(180deg, var(--tile-active-color) 75%, var(--tile-color) 75%);
+    }
+
+    &.horizontal_up50 {
+        background: linear-gradient(180deg, var(--tile-active-color) 50%, var(--tile-color) 50%);
+    }
+
+    &.horizontal_up25 {
+        background: linear-gradient(180deg, var(--tile-active-color) 25%, var(--tile-color) 25%);
+    }
+
+    &.vertical_right50 {
+        background: linear-gradient(90deg, var(--tile-active-color) 50%, var(--tile-color) 50%);
+    }
+
+    &.vertical_left50 {
+        background: linear-gradient(270deg, var(--tile-active-color) 50%, var(--tile-color) 50%);
+    }
+}
+
+
+.dashboard-text {
+    font-size: 2rem;
+}

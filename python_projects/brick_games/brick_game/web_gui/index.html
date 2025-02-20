@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brick Games by suzannpi</title>
+</head>
+
+<body>
+    <h1>Brick Games</h1>
+    <div id="brick-games">
+        <div id="game-board"></div>
+        <div id="side-board"></div>
+    </div>
+    <script src="./game.js" type="module"></script>
+    <div id="command-buttons">
+        <button class="start-button">start</button>
+        <button class="action-button" data-actions='pause'>pause</button>
+        <button class="reset-button">reset</button>
+    </div>
+    <div id="control-buttons">
+        <div id="direction-buttons">
+            <button id="up" class="action-button" data-actions='up'>↑</button>
+            <button id="down" class="action-button" data-actions='down'>↓</button>
+            <button id="left" class="action-button" data-actions='left'>←</button>
+            <button id="right" class="action-button" data-actions='right'>→</button>
+        </div>
+        <button id="action" class="action-button" data-actions='action'></button>
+    </div>
+    
+
+</body>
+
+</html>
