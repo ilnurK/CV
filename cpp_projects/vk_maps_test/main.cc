@@ -3,7 +3,7 @@
 
 int main() {
     try {
-        const char* filename{"tests/graph3.txt"};
+        const char* filename{"tests/graph0.txt"};
         calcGraph(filename);
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
